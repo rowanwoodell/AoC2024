@@ -2,30 +2,34 @@ input = open("input", "r")
 
 input_str = ""
 
-def check(i, str):
+def match_mul(i, str):
     m1 = 0
     m2 = 0
-    # refactor (for both parts): change all statements like this to use slice syntax instead of ... this
-    if str[i + 1] == "u" and str[i + 2] == "l" and str[i + 3] == "(":
-        j = 0
-        while str[i + 4 + j].isdigit():
+
+    if str[i : i + 4] == "mul(":
+        # pointer to character immediately following "("
+        j = i + 4
+        while str[j].isdigit():
             j += 1
         else:
-            if j == 0:
+            # next character not a digit
+            if j == i + 4:
                 return 0
-            elif str[i + 4 + j] == ",":
-                m1 = int(str[i + 4 : i + 4 + j])
+            elif str[j] == ",":
+                m1 = int(str[i + 4 : j])
             else:
                 return 0
-            
-        k = 0
-        while str[i + 4 + j + 1 + k].isdigit():
+        
+        # pointer to character immediately following ","
+        k = j + 1
+        while str[k].isdigit():
             k += 1
         else:
-            if k == 0:
+            # next character not a digit
+            if k == j + 1:
                 return 0
-            elif str[i + 4 + j + 1 + k] == ")":
-                m2 = int(str[i + 4 + j + 1 : i + 4 + j + 1 + k])
+            elif str[k] == ")":
+                m2 = int(str[j + 1 : k])
                 return m1 * m2
             else:
                 return 0
@@ -38,7 +42,6 @@ for l in input:
 sum = 0
 
 for i, x in enumerate(input_str):
-    if x == "m":
-        sum += check(i, input_str)
+    sum += match_mul(i, input_str)
 
 print(sum)
